@@ -56,10 +56,11 @@ lexical_errors_file = open("lexical_errors.txt", "w")
 # reading whole text file for scanner
 while scanner.is_arrived_eof():
     token_type, token_string = scanner.get_next_token()
-    if len(tokens_list) != scanner.scanning_line:
-        tokens_list.append([])
-    tokens_list[scanner.scanning_line - 1].append((token_type, token_string))
-    symbol_table_list.append(token_string)
+    if token_string == None and token_type == None:
+        if len(tokens_list) != scanner.scanning_line:
+            tokens_list.append([])
+        tokens_list[scanner.scanning_line - 1].append((token_type, token_string))
+        symbol_table_list.append(token_string)
 symbol_table_list = list(set(symbol_table_list))
 # putting lists into text files
 tokens_file.writelines(tokens_list)

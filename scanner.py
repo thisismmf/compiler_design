@@ -22,15 +22,18 @@ class Scanner:
             for transition in current_state.state_transitions:
                 if re.match(transition.regex, character):
                     next_state = transition.toState
-            if next_state.isFinal:
-                token_string = self.input_text[self.starting_char:self.scanning_char + 1]
-                if next_state.name == "ID":
-                    if token_string in keywords:
-                        keyword_name = "KEYWORD"
-                else:
-                    keyword_name = next_state.name
-                self.starting_char = self.scanning_char + 1
-                return keyword_name, token_string
+            if next_state!= None:
+                if next_state.isFinal:
+                    token_string = self.input_text[self.starting_char:self.scanning_char + 1]
+                    if next_state.name == "ID":
+                        if token_string in keywords:
+                            keyword_name = "KEYWORD"
+                    else:
+                        keyword_name = next_state.name
+                    self.starting_char = self.scanning_char + 1
+                    return keyword_name, token_string
+            else:
+                return "" , ""
 
     def change_scanning_line(self):
         self.scanning_line += 1
