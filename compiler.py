@@ -1,5 +1,5 @@
 from scanner import Scanner
-from DFA import DFA, TokenType, Transition
+from DFA import DFA, TokenType, Transition, State
 import re
 from enum import Enum
 
@@ -15,8 +15,9 @@ lexical_errors_list = []
 
 
 def create_dfa():
-    dfa = DFA()
-    dfa.add_new_state(1, False)
+    firstState = State(1, False)
+    dfa = DFA(firstState)
+    # dfa.add_new_state(1, False)
     dfa.add_new_state(2, False)
     dfa.add_new_state(3, False)
     dfa.add_new_state(4, False)
@@ -56,11 +57,14 @@ lexical_errors_file = open("lexical_errors.txt", "w")
 # reading whole text file for scanner
 while scanner.is_arrived_eof():
     token_type, token_string = scanner.get_next_token()
-    if token_string == None and token_type == None:
-        if len(tokens_list) != scanner.scanning_line:
-            tokens_list.append([])
-        tokens_list[scanner.scanning_line - 1].append((token_type, token_string))
-        symbol_table_list.append(token_string)
+    # print(f"token_type, token_string = {(token_type, token_string)}")
+
+    if len(tokens_list) != scanner.scanning_line:
+        tokens_list.append([])
+    tokens_list[scanner.scanning_line - 1].append((token_type, token_string))
+    symbol_table_list.append(token_string)
+    print(f"token_type, token_string = {(token_type, token_string)}")
+    print(f"symbol_table_list = {symbol_table_list}")
 symbol_table_list = list(set(symbol_table_list))
 # putting lists into text files
 tokens_file.writelines(tokens_list)
