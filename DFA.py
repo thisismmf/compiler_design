@@ -2,9 +2,12 @@ from enum import Enum
 
 
 class State:
-    def __init__(self, number: int, isFinal: bool = None, name: str = None):
+    def __init__(self, number: int, isFinal: bool = None, isError: bool = None, name: str = None,
+    errorMassage: str = None):
         self.number = number
         self.isFinal = isFinal
+        self.isError = isError
+        self.errorMassage = errorMassage
         self.state_transitions = []
         self.name = name
         # for a given regex check that it is available in inputs of one state transactions or not
@@ -31,13 +34,12 @@ class DFA:
 
 
 
-    def add_new_state(self, number: int = None, isFinal: bool = None, name: str = None):
-        self.allStates[number] = State(number=number, isFinal=isFinal, name=name)
+    def add_new_state(self, number: int, isFinal: bool = None, isError: bool = None, name: str = None,
+    errorMassage: str = None):
+        self.allStates[number] = State(number=number, isFinal=isFinal, isError=isError, name=name
+        , errorMassage=errorMassage)
 
     def add_new_transition(self, fromState: int, toState: int, regex: str):
-        print("new transition:")
-        print("from state: " + str(fromState))
-        print("to state: " + str(toState))
         self.allStates[fromState].add_new_transition(Transition(fromState=self.allStates[fromState], toState=self.allStates[toState], regex=regex))
 
 
