@@ -1,5 +1,5 @@
-from scanner import Scanner
-from DFA import DFA, TokenType, Transition, State
+from scanner.scanner import Scanner
+from scanner.DFA import DFA, TokenType, Transition, State
 import re
 from enum import Enum
 
@@ -19,7 +19,7 @@ def create_dfa():
     firstState = State(1, False)
     dfa = DFA(firstState)
     # dfa.add_new_state(1, False)
-    dfa.add_new_state(2, False, False)
+    dfa.add_new_state(2, True, False, "Error", "Invalid input")
     dfa.add_new_state(3, False, False)
     dfa.add_new_state(4, False, False)
     dfa.add_new_state(5, True, False, "COMMENT")
@@ -29,9 +29,10 @@ def create_dfa():
     dfa.add_new_state(9, True, False, "SYMBOL")
     dfa.add_new_state(10, True, False, "SYMBOL")
     dfa.add_new_state(11, True, False, "SYMBOL")
-    dfa.add_new_state(12, True, False, "Error", "Unmatched comment")
-    dfa.add_new_state(13, True, False, "Error", "Invalid number")
-    dfa.add_new_state(14, True, False, "Error", "Invalid input")
+    dfa.add_new_state(12, True, True, "Error", "Unmatched comment")
+    dfa.add_new_state(13, True, True, "Error", "Invalid number")
+    dfa.add_new_state(14, True, True, "Error", "Invalid input")
+    # dfa.add_new_state(15, True, True, "Error", "Invalid input")
 
     dfa.add_new_transition(1, 2, r'/')
     dfa.add_new_transition(2, 3, r'\*')
@@ -88,7 +89,9 @@ while not scanner.is_arrived_eof():
         if token_type == "ID" and token_string not in symbol_table_list:
             symbol_table_list.append(token_string)
     if token_type == "Error":
-        lexical_errors_list[str(scanner.scanning_line)] = f"{(token_string, massage)}"
+        if str(scanner.scanning_line) not in lexical_errors_list.keys():
+            lexical_errors_list[str(scanner.scanning_line)] = ""
+        lexical_errors_list[str(scanner.scanning_line)] += f"{(token_string, massage)} "
 # symbol_table_list = list(set(symbol_table_list))
 # putting lists into text files
 for line, tokens in enumerate(tokens_list):

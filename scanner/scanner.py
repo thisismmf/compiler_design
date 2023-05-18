@@ -59,11 +59,27 @@ class Scanner:
         if self.is_arrived_eof():
             length = self.scanning_char - self.starting_char + 1
             error_comment = ""
-            if length > 7:
-                error_comment += self.input_text[self.starting_char:self.starting_char + 7] + "..."
+            temp = self.input_text[self.starting_char : self.starting_char + 2]
+            if (self.input_text[self.starting_char : self.starting_char + 2] == "/*"):
+
+                if length > 7:
+                    error_comment += self.input_text[self.starting_char:self.starting_char + 7] + "..."
+                else:
+                    error_comment += self.input_text[self.starting_char: length + 1]
+                return self.scanning_line, "Error", error_comment, "Unclosed comment"
             else:
-                error_comment += self.input_text[self.starting_char: length + 1]
-            return self.scanning_line, "Error", error_comment, "Unclosed comment"
+                if current_state.isFinal:
+                    token_string = self.input_text[self.starting_char:self.scanning_char + 1]
+                    if current_state.name == "ID":
+                        if token_string in keywords:
+                            keyword_name = "KEYWORD"
+                    else:
+                        keyword_name = current_state.name
+                    self.starting_char = self.scanning_char
+                    massage = ""
+                    if keyword_name == "Error":
+                        massage = current_state.errorMassage
+                    return self.scanning_line, keyword_name, token_string, massage,
 
     def change_scanning_line(self, i):
         if i != self.current_i:
@@ -77,4 +93,4 @@ class Scanner:
         return True
 
 
-keywords = ["if", "else", "void", "int", "repeat", "until", "break", "return"]
+keywords = ["if", "else", "void", "int", "endif" "repeat", "until", "break", "return"]

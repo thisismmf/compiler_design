@@ -50,3 +50,5 @@ class TokenType(Enum):
     SYMBOL = 3
     COMMENT = 4
     WHITESPACE = 5
+    EOF = 6
+    
